@@ -1,0 +1,67 @@
+/* ESTILOS EN  GENERAL */
+
+
+
+
+/* ESTILOS DEL APARTADO DE SQL SERVER */
+
+.eliminarConsultaSqlServer{
+    padding-left: 10px;
+    color: red;
+    font-weight: bold;
+}
+
+.li_nuevaPestanaSqlServer{
+    padding: 5px;
+    position: relative;
+    background-color: #FFC000;
+    border: 1px solid #000;
+}
+
+.li_nuevaPestanaSqlServer::before{
+    content: "";
+    position: absolute;
+    background-color: white;
+    top: 0;
+    left: 0;
+    border-top: 10px solid #156082;
+    border-right: 20px solid #FFC000;
+}
+
+.txt_ConsultaSqlServer{
+    border: 2px solid #000;
+    width: 100%;
+}
+
+
+
+
+/* ESTILOS DEL APARTADO DE MYSQL */
+
+.eliminarConsultaMySql{
+    padding-left: 10px;
+    color: red;
+    font-weight: bold;
+}
+
+.li_nuevaPestanaMySql{
+    padding: 5px;
+    position: relative;
+    background-color: #FFC000;
+    border: 1px solid #000;
+}
+
+.li_nuevaPestanaMySql::before{
+    content: "";
+    position: absolute;
+    background-color: white;
+    top: 0;
+    left: 0;
+    border-top: 10px solid #156082;
+    border-right: 20px solid #FFC000;
+}
+
+.txt_ConsultaMySql{
+    border: 2px solid #000;
+    width: 100%;
+}
