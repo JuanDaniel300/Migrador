@@ -31,8 +31,8 @@
             {{------------------------------------------------------------------------------------------}}
             <div class="col-span-6 py-5">
                 <button class="bg-[#595959] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" id="AgregarNuevaConsultaSqlServer">New Query</button>
-                <button class="bg-[#FF9900] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Execute</button>
-                <select id="database" class="bg-gray-50 border border-gray-300 py-2 px-4 text-gray-900 rounded-lg">
+                <button class="bg-[#FF9900] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onclick="ejecutarConsultaSqlServer()">Execute</button>
+                <select id="databaseSqlSever" class="bg-gray-50 border border-gray-300 py-2 px-4 text-gray-900 rounded-lg">
                     <option selected>Database</option>
                     @foreach($databaseName as $database)
                         <option value="{{$database->DATABASE_NAME}}">{{$database->DATABASE_NAME}}</option>
@@ -173,7 +173,7 @@
 
             <div class="col-span-6 bg-white mb-3 mt-5">
                 <header class="p-2 font-bold border-2 border-black">Output</header>
-                <textarea class="border-2 border-black" rows="10" readonly style="width: 100%"></textarea>
+                <div id="resultadoQuery"></div>
             </div>
         </div>
     </div>
@@ -259,6 +259,7 @@
     <script src="{{asset('/js/nuevaConsultaSqlServer.js')}}"></script>
     <script src="{{asset('/js/nuevaConsultaMySql.js')}}"></script>
     <script src="{{asset('/js/modalAsistente.js')}}"></script>
+    <script src="{{asset('/js/ejecutarConsulta.js')}}"></script>
 
 </body>
 </html>

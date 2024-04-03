@@ -22,3 +22,5 @@ Route::get('/', function () {
 Route::get('/migrador', [MigradorController::class, 'mostrarDBSqlServer'])->name('mostrar.SqlServer');
 
 Route::get('/migradors',[MigradorController::class,"convertirJson"])->name('ver.migrador');
+
+Route::get('/ejecutar',[MigradorController::class,"ejecutarConsulta"])->name('ejecuta.consulta');
