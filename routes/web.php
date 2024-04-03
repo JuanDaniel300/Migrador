@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MigradorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,6 @@ Route::get('/', function () {
 });
 
 
-Route::get('/migrador', function () {
-    return view('migrador');
-});
+Route::get('/migrador', [MigradorController::class, 'mostrarDBSqlServer'])->name('mostrar.SqlServer');
+
+Route::get('/migradors',[MigradorController::class,"convertirJson"])->name('ver.migrador');
