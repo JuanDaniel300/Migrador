@@ -7,7 +7,7 @@ function agregarNuevaConsultaSqlServer() {
     nuevaConsultaSqlServer.className = 'consultasSqlServer';
     nuevaConsultaSqlServer.id = 'consultasSqlServer-' + contadorConsultasSqlServer;
     nuevaConsultaSqlServer.innerHTML = `
-        <textarea name="txt_ConsultaSqlServer" class="txt_ConsultaSqlServer" rows="10 placeholder="ConsultaSqlServer  #${contadorConsultasSqlServer}"></textarea>
+        <textarea id="consultaSqlServer" name="txt_ConsultaSqlServer" class="txt_ConsultaSqlServer" rows="10 placeholder="ConsultaSqlServer  #${contadorConsultasSqlServer}"></textarea>
     `;
 
     var btnEliminarSqlServer = document.createElement('button');

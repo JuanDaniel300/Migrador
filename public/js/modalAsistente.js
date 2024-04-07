@@ -7,9 +7,10 @@ const prevBtn = document.getElementById('prev-btn');
 const nextBtn = document.getElementById('next-btn');
 const confirmBtn = document.getElementById('confirm-btn');
 
+const overlay = document.getElementById("modalOverlay");
 
 
-const steps = ['step-1', 'step-2', 'step-3','step-4'];
+const steps = ['step-1', 'step-2', 'step-3'];
 let currentStep = 0;
 
 function showStep(stepIndex) {
@@ -54,11 +55,8 @@ function updateModalContent() {
                 content.textContent = 'Content for step 2.';
                 break;
             case 2:
-                content.textContent = 'Content for step 3.';
+                content.innerHTML = `<p>Seguro que quiere migrar, esa base de datos, dale click en <strong>confirma</strong>, para hacer la migración.</p>`;
                 break;
-            case 3:
-                content.textContent = 'Content for step 4.';
-            break;
         }
     }
 }
@@ -88,10 +86,33 @@ document.addEventListener('DOMContentLoaded', initModal);
 
 showModal.addEventListener('click', function(){
     modal.classList.remove('hidden');
+    overlay.style.display = "block";
     currentStep = 0;
     initModal();
 });
 
 closeModal.addEventListener('click', function(){
     modal.classList.add('hidden');
+    overlay.style.display = "none";
+});
+
+
+const manejadorBDSelect = document.getElementById('manejadorBD');
+const sqlServerDiv = document.getElementById('escogerBDSqlServer');
+const mySqlDiv = document.getElementById('escogerBDMySql');
+
+
+manejadorBDSelect.addEventListener('change', function() {
+    const selectedOption = parseInt(manejadorBDSelect.value);
+    if (selectedOption === 0) {
+        sqlServerDiv.classList.remove('hidden');
+        mySqlDiv.classList.add('hidden');
+    } else if (selectedOption === 1) {
+        mySqlDiv.classList.remove('hidden');
+        sqlServerDiv.classList.add('hidden');
+    } else {
+        // En caso de una selección inválida
+        sqlServerDiv.classList.add('hidden');
+        mySqlDiv.classList.add('hidden');
+    }
 });
