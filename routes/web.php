@@ -22,23 +22,15 @@ Route::get('/', function () {
 
 Route::get('/migrador', [MigradorController::class, 'mostrarVista'])->name('mostrar.Vista');
 
-<<<<<<< Updated upstream
-Route::get('/migradors', [MigradorController::class, "convertirJson"])->name('ver.migrador');
+Route::get('/convertir-json', [MigradorController::class, "convertirJson"])->name('ver.migrador');
 
-Route::get('/ejecutar', [MigradorController::class, "ejecutarConsulta"])->name('ejecuta.consulta');
-
-
-
-# rutas de juan
-Route::post('/MysqlSchema', [MysqlController::class, "obtenerSchemaDatabase"]);
-=======
-Route::get('/convertir-json',[MigradorController::class,"convertirJson"])->name('ver.migrador');
-
-Route::get('/ejecutar/{database}/{consulta}',[MigradorController::class,"ejecutarConsulta"])->name('ejecutar.consulta');
+Route::get('/ejecutar/{database}/{consulta}', [MigradorController::class, "ejecutarConsulta"])->name('ejecutar.consulta');
 
 //Route::get('/ejecutar',[MigradorController::class,"ejecutarConsulta"])->name('ejecutar.consulta');
+
+
+Route::post('/MysqlSchema', [MysqlController::class, "obtenerSchemaDatabase"]);
 
 Route::get('/migradorsqlserver', [MigradorController::class, 'mostrarDBSqlServer'])->name('mostrar.SqlServer');
 
 Route::get('/migradormysql', [MigradorController::class, 'mostrarDBMySQL'])->name('mostrar.MySql');
->>>>>>> Stashed changes

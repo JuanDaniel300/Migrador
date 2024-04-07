@@ -21,7 +21,7 @@ class MigradorController extends Controller
         $databases2  = $resultadosMySQL['databases2'];
         $tablesAndColumnsByDatabase2 = $resultadosMySQL['tablesAndColumnsByDatabase2'];
 
-        
+
         return view('migrador', compact('tablesAndColumnsByDatabase', 'databases', 'tablesAndColumnsByDatabase2', 'databases2'));
     }
 
@@ -38,16 +38,7 @@ class MigradorController extends Controller
 
         foreach ($databases as $database) {
             $databaseName = $database->DATABASE_NAME;
-<<<<<<< Updated upstream
 
-            $tablesAndColumns  = DB::select("SELECT t.name AS TABLE_NAME, c.name AS COLUMN_NAME, typ.name AS DATA_TYPE, c.is_nullable AS IS_NULLABLE
-                                    FROM $databaseName.sys.tables AS t
-                                    JOIN $databaseName.sys.columns AS c ON t.object_id = c.object_id
-                                    JOIN $databaseName.sys.types AS typ ON c.system_type_id = typ.system_type_id
-                                    WHERE t.lob_data_space_id != 1
-                                    ORDER BY t.name DESC
-=======
-        
             $tablesAndColumns  = DB::connection('sqlsrv')->select("SELECT 
                                                 s.name AS SCHEMA_NAME,
                                                 t.name AS TABLE_NAME, 
@@ -61,44 +52,29 @@ class MigradorController extends Controller
                                             INNER JOIN $databaseName.sys.types AS typ ON c.system_type_id = typ.system_type_id
                                             ORDER BY 
                                                 s.name DESC, t.name DESC        
->>>>>>> Stashed changes
                                 ");
 
             foreach ($tablesAndColumns as $tableAndColumn) {
                 $tableName = $tableAndColumn->TABLE_NAME_WITH_SCHEMA_NAME;
                 $tablesAndColumnsByDatabase[$databaseName][$tableName][] = $tableAndColumn;
-                
             }
         }
 
 
-<<<<<<< Updated upstream
-
-
-        return view('migrador')->with('tablesAndColumnsByDatabase', $tablesAndColumnsByDatabase)->with('databaseName', $databases);
-=======
         return [
             'databases' => $databases,
             'tablesAndColumnsByDatabase' => $tablesAndColumnsByDatabase
         ];
-        
->>>>>>> Stashed changes
     }
 
     public function convertirJson()
     {
 
-<<<<<<< Updated upstream
-        $database = 'Roomie';
-
-        $tables = DB::select("SELECT 
-=======
         $database = 'Prueba1';
 
         DB::connection('sqlsrv')->statement("USE $database");
-        
+
         $tables = DB::connection('sqlsrv')->select("SELECT 
->>>>>>> Stashed changes
                                 t.name AS TABLE_NAME, 
                                 c.name AS COLUMN_NAME, 
                                 typ.name AS DATA_TYPE, 
@@ -177,7 +153,7 @@ class MigradorController extends Controller
         }
 
         $json_data = json_encode($baseDatosJson, JSON_PRETTY_PRINT);
-        echo($json_data);
+        echo ($json_data);
         die();
         return $json_data;
     }
@@ -185,80 +161,47 @@ class MigradorController extends Controller
     public function ejecutarConsulta($database, $consulta)
     {
         try {
-<<<<<<< Updated upstream
-            $database = 'Roomie';
-
-
-            $resultados = DB::select('SELECT * FROM Acuerdos');
-
-            $tablaHtml = '<table border="1">';
-            $tablaHtml .= '<thead><tr>';
-
-            foreach ($resultados[0] as $columna => $valor) {
-                $tablaHtml .= '<th>' . $columna . '</th>';
-            }
-
-=======
             DB::connection('sqlsrv')->statement("USE $database");
-    
+
             $resultados = DB::connection('sqlsrv')->select($consulta);
-    
+
             $columnas = !empty($resultados) ? array_keys((array) $resultados[0]) : [];
-    
+
             $tablaHtml = '<table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">';
             $tablaHtml .= '<thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400" style="position: sticky; top: 0; z-index: 10; height: 50px;">';
             $tablaHtml .= '<tr>';
-    
+
             foreach ($columnas as $columna) {
                 $tablaHtml .= '<th class="px-6 py-3">' . $columna . '</th>';
             }
-    
->>>>>>> Stashed changes
+
             $tablaHtml .= '</tr></thead>';
-    
+
             $tablaHtml .= '<tbody>';
-<<<<<<< Updated upstream
 
-            foreach ($resultados as $fila) {
-                $tablaHtml .= '<tr>';
-
-                foreach ($fila as $valor) {
-                    $tablaHtml .= '<td>' . $valor . '</td>';
-                }
-
-                $tablaHtml .= '</tr>';
-            }
-
-            $tablaHtml .= '</tbody></table>';
-
-=======
-    
             if (empty($resultados)) {
                 $tablaHtml .= '<tr><td colspan="' . count($columnas) . '">La tabla está vacía.</td></tr>';
             } else {
                 foreach ($resultados as $fila) {
                     $tablaHtml .= '<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">';
-    
+
                     foreach ($fila as $valor) {
                         $tablaHtml .= '<td class="px-6 py-4">' . $valor . '</td>';
                     }
-    
+
                     $tablaHtml .= '</tr>';
                 }
             }
-    
+
             $tablaHtml .= '</tbody>';
             $tablaHtml .= '</table>';
-    
->>>>>>> Stashed changes
+
             return response()->json(['tablaHtml' => $tablaHtml]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()]);
         }
     }
-<<<<<<< Updated upstream
-=======
-    
+
     public function mostrarDBMySQL()
     {
 
@@ -267,7 +210,7 @@ class MigradorController extends Controller
 
         $sql = "SELECT `SCHEMA_NAME` AS SCHEMA_NAME2 FROM information_schema.schemata WHERE `SCHEMA_NAME` NOT IN ('" . implode("','", $exclude_databases) . "')";
 
-    
+
         $databases2 = DB::connection('mysql')->select($sql);
 
 
@@ -291,7 +234,6 @@ class MigradorController extends Controller
                 $tableName2 = $tableAndColumn2->TABLE_NAME2;
                 $tablesAndColumnsByDatabase2[$databaseName2][$tableName2][] = $tableAndColumn2;
             }
-
         }
 
         return [
@@ -299,8 +241,4 @@ class MigradorController extends Controller
             'tablesAndColumnsByDatabase2' => $tablesAndColumnsByDatabase2
         ];
     }
-
-    
-    
->>>>>>> Stashed changes
 }
