@@ -16,12 +16,12 @@ class MigradorController extends Controller
                                     WHERE state_desc = 'ONLINE'
                                         AND name NOT IN ('master', 'tempdb', 'model', 'msdb')
                                 ");
-        
+
         $tablesAndColumnsByDatabase = [];
-        
+
         foreach ($databases as $database) {
             $databaseName = $database->DATABASE_NAME;
-        
+
             $tablesAndColumns  = DB::select("SELECT t.name AS TABLE_NAME, c.name AS COLUMN_NAME, typ.name AS DATA_TYPE, c.is_nullable AS IS_NULLABLE
                                     FROM $databaseName.sys.tables AS t
                                     JOIN $databaseName.sys.columns AS c ON t.object_id = c.object_id
@@ -29,7 +29,7 @@ class MigradorController extends Controller
                                     WHERE t.lob_data_space_id != 1
                                     ORDER BY t.name DESC
                                 ");
-            
+
             foreach ($tablesAndColumns as $tableAndColumn) {
                 $tableName = $tableAndColumn->TABLE_NAME;
                 $tablesAndColumnsByDatabase[$databaseName][$tableName][] = $tableAndColumn;
@@ -40,8 +40,8 @@ class MigradorController extends Controller
         // echo($json_data);
         // die();
 
-        
-        
+
+
         return view('migrador')->with('tablesAndColumnsByDatabase', $tablesAndColumnsByDatabase)->with('databaseName', $databases);
     }
 
@@ -50,7 +50,7 @@ class MigradorController extends Controller
     {
 
         $database = 'Roomie';
-        
+
         $tables = DB::select("SELECT 
                                 t.name AS TABLE_NAME, 
                                 c.name AS COLUMN_NAME, 
@@ -77,7 +77,7 @@ class MigradorController extends Controller
         $baseDatosJson = [];
 
         $currentTable = null;
-        
+
         foreach ($tables as $row) {
 
             if ($row->TABLE_NAME !== $currentTable) {
@@ -116,36 +116,34 @@ class MigradorController extends Controller
         try {
             $database = 'Roomie';
 
-        
+
             $resultados = DB::select('SELECT * FROM Acuerdos');
-            
+
             $tablaHtml = '<table border="1">';
             $tablaHtml .= '<thead><tr>';
-        
+
             foreach ($resultados[0] as $columna => $valor) {
                 $tablaHtml .= '<th>' . $columna . '</th>';
             }
-        
+
             $tablaHtml .= '</tr></thead>';
             $tablaHtml .= '<tbody>';
-        
+
             foreach ($resultados as $fila) {
                 $tablaHtml .= '<tr>';
 
                 foreach ($fila as $valor) {
                     $tablaHtml .= '<td>' . $valor . '</td>';
                 }
-        
+
                 $tablaHtml .= '</tr>';
             }
-        
+
             $tablaHtml .= '</tbody></table>';
 
             return response()->json(['tablaHtml' => $tablaHtml]);
-
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()]);
         }
     }
-    
 }
