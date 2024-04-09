@@ -21,7 +21,7 @@ class MigradorController extends Controller
         $databases2  = $resultadosMySQL['databases2'];
         $tablesAndColumnsByDatabase2 = $resultadosMySQL['tablesAndColumnsByDatabase2'];
 
-        
+
         return view('migrador', compact('tablesAndColumnsByDatabase', 'databases', 'tablesAndColumnsByDatabase2', 'databases2'));
     }
 
@@ -38,7 +38,7 @@ class MigradorController extends Controller
         
         foreach ($databases as $database) {
             $databaseName = $database->DATABASE_NAME;
-        
+
             $tablesAndColumns  = DB::connection('sqlsrv')->select("SELECT 
                                                 s.name AS SCHEMA_NAME,
                                                 t.name AS TABLE_NAME, 
@@ -58,7 +58,6 @@ class MigradorController extends Controller
             foreach ($tablesAndColumns as $tableAndColumn) {
                 $tableName = $tableAndColumn->TABLE_NAME_WITH_SCHEMA_NAME;
                 $tablesAndColumnsByDatabase[$databaseName][$tableName][] = $tableAndColumn;
-                
             }
         }
 
@@ -67,11 +66,12 @@ class MigradorController extends Controller
             'databases' => $databases,
             'tablesAndColumnsByDatabase' => $tablesAndColumnsByDatabase
         ];
-        
+
     }
 
     public function convertirJsonSqlServer(request $request)
     {
+
         $database = $request->input('escogerBDSqlServer');
         
         try {
@@ -99,6 +99,35 @@ class MigradorController extends Controller
                                 WHERE t.name != 'sysdiagrams' AND typ.name != 'sysname'
                                 ORDER BY 
                                     t.name DESC");
+
+
+        $database = 'Prueba1';
+
+        DB::connection('sqlsrv')->statement("USE $database");
+
+        $tables = DB::connection('sqlsrv')->select("SELECT 
+                                t.name AS TABLE_NAME, 
+                                c.name AS COLUMN_NAME, 
+                                typ.name AS DATA_TYPE, 
+                                c.is_nullable AS IS_NULLABLE, 
+                                c.is_identity AS IS_IDENTITY,
+                                CASE 
+                                    WHEN pk.name IS NOT NULL THEN pk.name
+                                    ELSE '0'
+                                END AS PRIMARY_KEY_CONSTRAINT_NAME
+                            FROM 
+                                $database.sys.tables AS t
+                            JOIN 
+                                $database.sys.columns AS c ON t.object_id = c.object_id
+                            JOIN 
+                                $database.sys.types AS typ ON c.system_type_id = typ.system_type_id
+                            LEFT JOIN 
+                                $database.sys.key_constraints AS pk ON t.object_id = pk.parent_object_id AND c.column_id = pk.unique_index_id AND pk.type = 'PK'
+                            WHERE 
+                                t.lob_data_space_id != 1
+                            ORDER BY 
+                                t.name DESC");
+
 
 
             $foreign_keys_SqlServer = DB::connection('sqlsrv')->select("SELECT 
@@ -175,6 +204,7 @@ class MigradorController extends Controller
 
         try {
 
+
             DB::connection('mysql')->statement("CREATE DATABASE $database");
 
             DB::connection('mysql')->statement("USE $database");
@@ -194,47 +224,48 @@ class MigradorController extends Controller
     public function ejecutarConsultaSqlServer($database, $consulta)
     {
         try {
+
             DB::connection('sqlsrv')->statement("USE $database");
-    
+
             $resultados = DB::connection('sqlsrv')->select($consulta);
-    
+
             $columnas = !empty($resultados) ? array_keys((array) $resultados[0]) : [];
-    
+
             $tablaHtml = '<table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">';
             $tablaHtml .= '<thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400" style="position: sticky; top: 0; z-index: 10; height: 50px;">';
             $tablaHtml .= '<tr>';
-    
+
             foreach ($columnas as $columna) {
                 $tablaHtml .= '<th class="px-6 py-3">' . $columna . '</th>';
             }
-    
+
             $tablaHtml .= '</tr></thead>';
-    
+
             $tablaHtml .= '<tbody>';
-    
+
             if (empty($resultados)) {
                 $tablaHtml .= '<tr><td colspan="' . count($columnas) . '">La tabla está vacía.</td></tr>';
             } else {
                 foreach ($resultados as $fila) {
                     $tablaHtml .= '<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">';
-    
+
                     foreach ($fila as $valor) {
                         $tablaHtml .= '<td class="px-6 py-4">' . $valor . '</td>';
                     }
-    
+
                     $tablaHtml .= '</tr>';
                 }
             }
-    
+
             $tablaHtml .= '</tbody>';
             $tablaHtml .= '</table>';
-    
+
             return response()->json(['tablaHtml' => $tablaHtml]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()]);
         }
     }
-    
+
     public function mostrarDBMySQL()
     {
 
@@ -245,6 +276,7 @@ class MigradorController extends Controller
 
     
         $databases2 = DB::connection('mysql')->select($mysql);
+
 
 
         $tablesAndColumnsByDatabase2 = [];
@@ -267,7 +299,6 @@ class MigradorController extends Controller
                 $tableName2 = $tableAndColumn2->TABLE_NAME2;
                 $tablesAndColumnsByDatabase2[$databaseName2][$tableName2][] = $tableAndColumn2;
             }
-
         }
 
         return [
@@ -447,3 +478,4 @@ class MigradorController extends Controller
     }
 
 }
+

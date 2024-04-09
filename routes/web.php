@@ -28,6 +28,7 @@ Route::get('/ejecutar/{database}/{consulta}',[MigradorController::class,"ejecuta
 
 Route::post('/migrar-bd',[MigradorController::class,"migrarBDSqlServer"])->name('migrar.BD.SqlServer');
 
+
 Route::get('/migradorsqlserver', [MigradorController::class, 'mostrarDBSqlServer'])->name('mostrar.SqlServer');
 
 Route::get('/migradormysql', [MigradorController::class, 'mostrarDBMySQL'])->name('mostrar.MySql');
@@ -40,4 +41,5 @@ Route::get('/ejecutar/mysql/{database}/{consulta}',[MigradorController::class,"e
 
 # rutas de juan
 Route::get('/MysqlSchema', [MysqlController::class, "obtenerSchemaDatabase"]);
+
 
