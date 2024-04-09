@@ -7,7 +7,7 @@ function agregarNuevaConsultaMySql() {
     nuevaConsultaMySql.className = 'consultaMySql';
     nuevaConsultaMySql.id = 'consultaMySql-' + contadorConsultasMySql;
     nuevaConsultaMySql.innerHTML = `
-        <textarea name="txt_ConsultaMySql" class="txt_ConsultaMySql" rows="10 placeholder="ConsultaMySql  #${contadorConsultasMySql}"></textarea>
+        <textarea id="consultaMySql" name="txt_ConsultaMySql" class="txt_ConsultaMySql" rows="10 placeholder="ConsultaMySql  #${contadorConsultasMySql}"></textarea>
     `;
 
     var btnEliminarMySql = document.createElement('button');

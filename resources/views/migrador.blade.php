@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Migrador</title>
     <link rel="icon" href="{{asset('/images/logo_migrador.png')}}" type="image/x-icon">
     <link rel="stylesheet" href="{{asset('/css/estilosMigrador.css')}}">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
     <style>
+
         .modal {
         position: fixed;
         z-index: 1000;
@@ -42,6 +44,29 @@
         background-color: rgba(0, 0, 0, 0.5); 
         }
 
+        ::-webkit-scrollbar {
+        width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+        background: #888;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+        }
+
+        ::-webkit-scrollbar-horizontal {
+        height: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:horizontal {
+        background: #888;
+        }
 
     </style>
 </head>
@@ -62,7 +87,6 @@
         </header>
 
         <div  class="container mx-auto mt-5">
-    
             <div class="grid grid-cols-6 gap-4 mt-2">
                 {{------------------------------------------------------------------------------------------}}
                 {{--                    Aparatado de las base de dato SQL SERVER                          --}}
@@ -86,45 +110,46 @@
                             <div class="w-5 h-5 bg-[#4EA72E] rounded-full"></div>
                         </div>
                     </div>
-                    
-                    @foreach($tablesAndColumnsByDatabase as $databaseName => $tables)
-                    <details class="border-2 p-4 [&_svg]:open:-rotate-180">
-                        <summary class="flex cursor-pointer list-none items-center gap-4">
-                            <div>
-                                <svg class="rotate-0 transform text-blue-700 transition-all duration-300" fill="none" height="20" width="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
-                                    <polyline points="6 9 12 15 18 9"></polyline>
-                                </svg>
-                            </div>
-                            <img class="h-auto w-auto" src="{{ asset('/images/icon_database.png') }}" alt="" style="width: 20px;">  
-                            <div>{{ $databaseName }}</div>
-                        </summary>
-                        <ul style="padding-left: 20px; margin-top: 5px;">
-                            @foreach($tables as $tableName => $columns)
-                                <li class="ml-10 mt-2">
-                                    <details class="border-2 p-4 [&_svg]:open:-rotate-180">
-                                        <summary class="flex cursor-pointer list-none items-center gap-4">
-                                            <div>
-                                                <svg class="rotate-0 transform text-blue-700 transition-all duration-300" fill="none" height="20" width="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
-                                                    <polyline points="6 9 12 15 18 9"></polyline>
-                                                </svg>
-                                            </div>
-                                            <img src="{{ asset('/images/icon_table.png') }}" alt="" style="height: 20px; width: 20px;">
-                                            <p class="font-semibold text-neutral-700">{{ $tableName }}</p>
-                                        </summary>
-                                        <ul style="padding-left: 20px; margin-top: 5px;">
-                                            @foreach($columns as $column)
-                                                <li class="flex items-center text-neutral-500 ml-6">
-                                                    <img class="mr-2" src="{{ asset('/images/icon_column.png') }}" alt="" style="width: 16px; height: 16px;">
-                                                    <span>{{ $column->COLUMN_NAME }} ({{ $column->DATA_TYPE }})</span>
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    </details>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </details>
-                    @endforeach
+                    <div style="overflow-y: scroll; max-height: 500px;">
+                        @foreach($tablesAndColumnsByDatabase as $databaseName => $tables)
+                            <details class="border-2 p-4 [&_svg]:open:-rotate-180">
+                                <summary class="flex cursor-pointer list-none items-center gap-4">
+                                    <div>
+                                        <svg class="rotate-0 transform text-blue-700 transition-all duration-300" fill="none" height="20" width="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </div>
+                                    <img class="h-auto w-auto" src="{{ asset('/images/icon_database.png') }}" alt="" style="width: 20px;">  
+                                    <div>{{ $databaseName }}</div>
+                                </summary>
+                                <ul style="padding-left: 20px; margin-top: 5px;">
+                                    @foreach($tables as $tableName => $columns)
+                                        <li class="ml-10 mt-2">
+                                            <details class="border-2 p-4 [&_svg]:open:-rotate-180">
+                                                <summary class="flex cursor-pointer list-none items-center gap-4">
+                                                    <div>
+                                                        <svg class="rotate-0 transform text-blue-700 transition-all duration-300" fill="none" height="20" width="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+                                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                                        </svg>
+                                                    </div>
+                                                    <img src="{{ asset('/images/icon_table.png') }}" alt="" style="height: 20px; width: 20px;">
+                                                    <p class="font-semibold text-neutral-700">{{ $tableName }}</p>
+                                                </summary>
+                                                <ul style="padding-left: 20px; margin-top: 5px;">
+                                                    @foreach($columns as $column)
+                                                        <li class="flex items-center text-neutral-500 ml-6">
+                                                            <img class="mr-2" src="{{ asset('/images/icon_column.png') }}" alt="" style="width: 16px; height: 16px;">
+                                                            <span>{{ $column->COLUMN_NAME }} ({{ $column->DATA_TYPE }})</span>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            </details>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </details>
+                        @endforeach
+                    </div>
                 
                 </div>
 
@@ -141,8 +166,8 @@
 
                 <div class="col-span-6 py-5">
                     <button class="bg-[#595959] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" id="AgregarNuevaConsultaMySql">New Query</button>
-                    <button class="bg-[#FF9900] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Execute</button>
-                    <select id="database" class="bg-gray-50 border border-gray-300 py-2 px-4 text-gray-900 rounded-lg">
+                    <button id="ejecutarConsultaMySql" class="bg-[#FF9900] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Execute</button>
+                    <select id="databaseMySql" class="bg-gray-50 border border-gray-300 py-2 px-4 text-gray-900 rounded-lg">
                         <option selected>Database</option>
                         @foreach($databases2 as $database2)
                             <option value="{{$database2->SCHEMA_NAME2}}">{{$database2->SCHEMA_NAME2}}</option>
@@ -152,52 +177,53 @@
 
                 <div class="col-span-2 bg-white mb-3">
                     <div class="flex items-center justify-between mx-2 py-2">
-                        <header class="p-2 font-bold">SqlServer</header>
+                        <header class="p-2 font-bold">MySql</header>
                         <div class="flex items-center space-x-2">
                             <button class="bg-blue-500 hover:bg-blue-700 py-1 px-3 rounded-full">Connect</button>
                             <p>Disconnected</p>
                             <div class="w-5 h-5 bg-[#FF0000] rounded-full"></div>
                         </div>
                     </div>
-                    
-                    @foreach($tablesAndColumnsByDatabase2 as $databaseName2 => $tables2)
-                    <details class="border-2 p-4 [&_svg]:open:-rotate-180">
-                        <summary class="flex cursor-pointer list-none items-center gap-4">
-                            <div>
-                                <svg class="rotate-0 transform text-blue-700 transition-all duration-300" fill="none" height="20" width="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
-                                    <polyline points="6 9 12 15 18 9"></polyline>
-                                </svg>
-                            </div>
-                            <img class="h-auto w-auto" src="{{ asset('/images/icon_database.png') }}" alt="" style="width: 20px;">  
-                            <div>{{ $databaseName2 }}</div>
-                        </summary>
-                        <ul style="padding-left: 20px; margin-top: 5px;">
-                            @foreach($tables2 as $tableName2 => $columns2)
-                                <li class="ml-10 mt-2">
-                                    <details class="border-2 p-4 [&_svg]:open:-rotate-180">
-                                        <summary class="flex cursor-pointer list-none items-center gap-4">
-                                            <div>
-                                                <svg class="rotate-0 transform text-blue-700 transition-all duration-300" fill="none" height="20" width="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
-                                                    <polyline points="6 9 12 15 18 9"></polyline>
-                                                </svg>
-                                            </div>
-                                            <img src="{{ asset('/images/icon_table.png') }}" alt="" style="height: 20px; width: 20px;">
-                                            <p class="font-semibold text-neutral-700">{{ $tableName2 }}</p>
-                                        </summary>
-                                        <ul style="padding-left: 20px; margin-top: 5px;">
-                                            @foreach($columns2 as $column2)
-                                                <li class="flex items-center text-neutral-500 ml-6">
-                                                    <img class="mr-2" src="{{ asset('/images/icon_column.png') }}" alt="" style="width: 16px; height: 16px;">
-                                                    <span>{{ $column2->COLUMN_NAME2 }} ({{ $column2->DATA_TYPE2 }})</span>
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    </details>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </details>
-                    @endforeach
+                    <div style="overflow-y: scroll; max-height: 500px;">
+                        @foreach($tablesAndColumnsByDatabase2 as $databaseName2 => $tables2)
+                        <details class="border-2 p-4 [&_svg]:open:-rotate-180">
+                            <summary class="flex cursor-pointer list-none items-center gap-4">
+                                <div>
+                                    <svg class="rotate-0 transform text-blue-700 transition-all duration-300" fill="none" height="20" width="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                </div>
+                                <img class="h-auto w-auto" src="{{ asset('/images/icon_database.png') }}" alt="" style="width: 20px;">  
+                                <div>{{ $databaseName2 }}</div>
+                            </summary>
+                            <ul style="padding-left: 20px; margin-top: 5px;">
+                                @foreach($tables2 as $tableName2 => $columns2)
+                                    <li class="ml-10 mt-2">
+                                        <details class="border-2 p-4 [&_svg]:open:-rotate-180">
+                                            <summary class="flex cursor-pointer list-none items-center gap-4">
+                                                <div>
+                                                    <svg class="rotate-0 transform text-blue-700 transition-all duration-300" fill="none" height="20" width="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+                                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                                    </svg>
+                                                </div>
+                                                <img src="{{ asset('/images/icon_table.png') }}" alt="" style="height: 20px; width: 20px;">
+                                                <p class="font-semibold text-neutral-700">{{ $tableName2 }}</p>
+                                            </summary>
+                                            <ul style="padding-left: 20px; margin-top: 5px;">
+                                                @foreach($columns2 as $column2)
+                                                    <li class="flex items-center text-neutral-500 ml-6">
+                                                        <img class="mr-2" src="{{ asset('/images/icon_column.png') }}" alt="" style="width: 16px; height: 16px;">
+                                                        <span>{{ $column2->COLUMN_NAME2 }} ({{ $column2->DATA_TYPE2 }})</span>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </details>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </details>
+                        @endforeach
+                    </div>
                 </div>
 
                 <div class="col-span-4">
@@ -228,7 +254,7 @@
                         </button>
                     </div>
                     <div class="p-4 md:p-5">
-                        <div id="resultadoQuery" class="relative overflow-x-auto shadow-md sm:rounded-lg" style="max-width: 100%; overflow-x: auto; max-height: 400px;""></div>
+                        <div id="resultadoQuery" class="relative overflow-x-auto shadow-md sm:rounded-lg" style="max-width: 100%; overflow-x: auto; max-height: 400px;"></div>
                     </div>
 
                     <div class="flex justify-center border-t pt-4 md:p-5">
@@ -260,9 +286,8 @@
                                 </span>
                             </li>
                             <li class="flex items-center">
-                                <span class="me-2">
-                                    3.- Confirmar
-                                </span>
+                                <span class="me-2">3.-</span>
+                                Confirmar
                             </li>
                         </ol>
                         <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white close-modal" data-modal-hide="default-modal">
@@ -276,21 +301,24 @@
                     <div class="p-4 md:p-5">
 
                         <div id="step-1-content">
-                            <select name="manejadorBD" id="manejadorBD">
-                                <option selected>Selecciona el manejador</option>
-                                <option value=0>SqlServer</option>
-                                <option value=1>MySql</option>
+                            <label for="manejadorBD" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Selecciona el manejador</label>
+                            <select name="manejadorBD" id="manejadorBD" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option value="Manejador" selected>Manejador</option>
+                                <option value="0">SqlServer</option>
+                                <option value="1">MySql</option>
                             </select>
                         </div>
 
                         <div id="step-2-content" class="hidden">
-                            <select name="escogerBDSqlServer" id="escogerBDSqlServer" class="hidden">
+                            <select name="escogerBDSqlServer" id="escogerBDSqlServer" class="hidden bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option value="BDSqlServer" selected>Base de datos SqlServer</option>
                                 @foreach($databases as $database)
                                 <option value="{{$database->DATABASE_NAME}}">{{$database->DATABASE_NAME}}</option>
                                 @endforeach
                             </select>
 
-                            <select name="escogerBDMySql" id="escogerBDMySql" class="hidden">
+                            <select name="escogerBDMySql" id="escogerBDMySql" class="hidden bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option value="BDMySql" selected>Base de datos MySql</option>
                                 @foreach($databases2 as $database2)
                                 <option value="{{$database2->SCHEMA_NAME2}}">{{$database2->SCHEMA_NAME2}}</option>
                                 @endforeach
@@ -306,7 +334,8 @@
                     <div class="flex justify-center border-t pt-4 md:p-5">
                         <button id="prev-btn" data-modal-hide="default-modal" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Antras</button>
                         <button id="next-btn" data-modal-hide="default-modal" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Seguiente</button>
-                        <button id="confirm-btn" type="button" class="absolute right-0 py-2.5 px-5 ms-3 mr-5 text-sm font-medium text-white focus:outline-none bg-green-500 rounded-lg border border-green-500 hover:bg-green-600 focus:z-10 focus:ring-4 focus:ring-green-100 dark:focus:ring-green-700">Confirmar</button>
+                        <button id="confirmarSqlServer" type="button" class="absolute hidden right-0 py-2.5 px-5 ms-3 mr-5 text-sm font-medium text-white focus:outline-none bg-green-500 rounded-lg border border-green-500 hover:bg-green-600 focus:z-10 focus:ring-4 focus:ring-green-100 dark:focus:ring-green-700">Confirmar sql server</button>
+                        <button id="confirmarMySQL" type="button" class="absolute hidden right-0 py-2.5 px-5 ms-3 mr-5 text-sm font-medium text-white focus:outline-none bg-green-500 rounded-lg border border-green-500 hover:bg-green-600 focus:z-10 focus:ring-4 focus:ring-green-100 dark:focus:ring-green-700">Confirmar mysql</button>
                     </div>
                 </div>
             </div>
@@ -320,6 +349,7 @@
         <script src="{{asset('/js/nuevaConsultaMySql.js')}}"></script>
         <script src="{{asset('/js/modalAsistente.js')}}"></script>
         <script src="{{asset('/js/ejecutarConsulta.js')}}"></script>
+        {{-- <script src="{{asset('/js/pruebamigrar.js')}}"></script> --}}
 
     </body>
 </html>

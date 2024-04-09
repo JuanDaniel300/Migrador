@@ -7,9 +7,10 @@ use Illuminate\Support\Facades\DB;
 
 class MysqlController extends Controller
 {
-    public function obtenerSchemaDatabase(Request $request)
+    public function obtenerSchemaDatabase()
     {
-        $database = $request->input('database');
+
+        $database = "prueba1";
 
         $query = "
         SELECT 
@@ -43,6 +44,9 @@ class MysqlController extends Controller
         $exec = DB::select($query, [$database]);
 
         $json_data = $this->formatJson($exec);
+
+        dump($json_data);
+        die();
 
         return response()->json([
             "code" => "200",
